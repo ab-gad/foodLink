@@ -2,6 +2,7 @@
   "name": "admin",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
+  "implicitDependencies": ["shared-styles"],
   "prefix": "admin",
   "sourceRoot": "apps/admin/src",
   "tags": [],
@@ -10,6 +11,9 @@
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/shared/styles/src/lib"]
+        },
         "outputPath": "dist/apps/admin",
         "browser": "apps/admin/src/main.ts",
         "tsConfig": "apps/admin/tsconfig.app.json",
