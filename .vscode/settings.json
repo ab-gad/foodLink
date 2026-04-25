@@ -1,5 +1,24 @@
 {
     "cSpell.words": [
         "commitlint"
-    ]
+    ],
+    "tailwindCSS.includeLanguages": {
+        "html": "html",
+        "typescript": "html",
+        "javascript": "html"
+    },
+    // "tailwindCSS.classAttributes": [
+    // "class",
+    // "ngClass",
+    // "[class]",
+    // "[ngClass]"
+    // ],
+    "tailwindCSS.experimental.classRegex": [
+        [
+            "cva\\(([^]*)\\)",
+            "['\"]([^'\"]*)['\"]"
+        ]
+    ],
+    "tailwindCSS.emmetCompletions": true,
+    "tailwindCSS.experimental.configFile": "libs/shared/styles/src/lib/spartan-theme.scss"
 }
