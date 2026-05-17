@@ -1,0 +1,10 @@
+<lib-auth-ui-auth-layout>
+  <lib-auth-ui-login-form form (formSubmit)="onLoginRequest($event)" />
+  @if (authService.loginMutation.isError()) {
+  <div
+    class="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-200 dark:border-red-900/50"
+  >
+    Authentication failed. Verify account privileges.
+  </div>
+  }
+</lib-auth-ui-auth-layout>

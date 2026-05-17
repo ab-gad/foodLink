@@ -1,0 +1,13 @@
+{
+  "name": "shared-auth-feature-login",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/auth/feature-login/src",
+  "prefix": "lib-auth-feature",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
