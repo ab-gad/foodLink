@@ -2,7 +2,7 @@
   "name": "shared-core",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/shared/core/src",
-  "prefix": "lib",
+  "prefix": "lib-shared-core",
   "projectType": "library",
   "tags": ["scope:shared", "type:core"],
   "targets": {

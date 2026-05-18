@@ -45,9 +45,11 @@
       >
     </hlm-field>
     <hlm-field>
-      <button hlmBtn type="submit" [disabled]="form.invalid">Login</button>
+      <button hlmBtn type="submit" [disabled]="form.invalid || isLoading()">
+        Login
+      </button>
     </hlm-field>
-    <hlm-field-separator>Or continue with</hlm-field-separator>
+    <hlm-field-separator>Or you can register</hlm-field-separator>
     <hlm-field>
       <p hlmFieldDescription class="text-center">
         Don't have an account?

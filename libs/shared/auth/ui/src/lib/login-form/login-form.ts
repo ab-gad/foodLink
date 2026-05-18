@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -15,6 +15,7 @@ import { LoginRequest } from '@foodlink/shared-auth-util';
 export class LoginForm {
   private readonly _fb = inject(FormBuilder);
   formSubmit = output<LoginRequest>();
+  isLoading = input<boolean>(false);
   public form = this._fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],

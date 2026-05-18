@@ -1,10 +1,10 @@
 // libs/shared/auth/data-access/src/lib/auth.service.ts
 import { inject, Injectable, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { injectMutation } from '@tanstack/angular-query-experimental';
 import { LoginRequest, AuthenticationResponse } from '@foodlink/shared-auth-util';
 import { lastValueFrom } from 'rxjs';
-import { ENV_CONFIG } from '@foodlink/shared-util'
+import { ENV_CONFIG, SHOW_GLOBAL_LOADER, TOAST_PROMISE_CONFIG } from '@foodlink/shared-util'
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +24,13 @@ export class AuthService {
     readonly loginMutation = injectMutation(() => ({
         mutationFn: (credentials: LoginRequest) =>
             lastValueFrom(
-                this.http.post<AuthenticationResponse>(`${this.apiUrl}/api/auth/login`, credentials))
+                this.http.post<AuthenticationResponse>(`${this.apiUrl}/auth/login`, credentials, {
+                    // context: new HttpContext().set(SHOW_GLOBAL_LOADER, true)
+                    context: new HttpContext().set(SHOW_GLOBAL_LOADER, true).set(TOAST_PROMISE_CONFIG, {
+                        success: 'Login successful',
+                        error: (err) => `Login failed: ${err.error.message || err.message}`
+                    })
+                }))
         , onSuccess: (response) => {
             this.handleAuthSuccess(response);
         }

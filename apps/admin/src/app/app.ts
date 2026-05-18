@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
+import { TopLoaderOverlayComponent } from '@foodlink/shared-core';
+import { HlmToasterImports } from '@spartan-ng/helm/sonner';
 @Component({
-  imports: [RouterModule],
+  imports: [RouterModule, HlmToasterImports, TopLoaderOverlayComponent],
   selector: 'admin-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',

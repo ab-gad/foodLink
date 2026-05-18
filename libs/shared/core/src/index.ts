@@ -1,3 +1,7 @@
 export * from './lib/interceptors/auth.interceptor';
+export * from './lib/interceptors/error.interceptor';
+export * from './lib/interceptors/feedback.interceptor';
+export * from './lib/components/top-loader-overlay';
 export * from './lib/guards/auth.gard';
+export * from './lib/services/global-loader.service';
 export * from './lib/config/app-config.factory';
