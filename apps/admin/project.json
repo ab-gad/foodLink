@@ -5,7 +5,7 @@
   "implicitDependencies": ["shared-styles"],
   "prefix": "admin",
   "sourceRoot": "apps/admin/src",
-  "tags": [],
+  "tags": ["scope:admin", "type:app"],
   "targets": {
     "build": {
       "executor": "@angular/build:application",

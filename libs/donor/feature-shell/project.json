@@ -4,7 +4,7 @@
   "sourceRoot": "libs/donor/feature-shell/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": [],
+  "tags": ["scope:donor", "type:feature"],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint"

@@ -15,13 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@foodlink/donor-feature-shell": [
-        "libs/donor/feature-shell/src/index.ts"
-      ],
-      "@foodlink/shared-styles": ["libs/shared/styles/src/index.ts"],
-      "@foodlink/shared-ui-components": [
-        "libs/shared/ui/components/src/index.ts"
-      ],
       "@spartan-ng/helm": ["libs/shared/ui/helm/src/index.ts"],
       "@spartan-ng/helm/accordion": [
         "./libs/shared/ui/helm/accordion/src/index.ts"
@@ -150,6 +143,13 @@
         "./libs/shared/ui/helm/typography/src/index.ts"
       ],
       "@spartan-ng/helm/utils": ["./libs/shared/ui/helm/utils/src/index.ts"],
+      "@foodlink/donor-feature-shell": [
+        "libs/donor/feature-shell/src/index.ts"
+      ],
+      "@foodlink/shared-styles": ["libs/shared/styles/src/index.ts"],
+      "@foodlink/shared-ui-components": [
+        "libs/shared/ui/components/src/index.ts"
+      ],
       "@foodlink/shared-auth-data-access": [
         "libs/shared/auth/data-access/src/index.ts"
       ],
@@ -158,7 +158,8 @@
       ],
       "@foodlink/shared-auth-ui": ["libs/shared/auth/ui/src/index.ts"],
       "@foodlink/shared-util": ["libs/shared/util/src/index.ts"],
-      "@foodlink/shared-auth-util": ["libs/shared/auth/util/src/index.ts"]
+      "@foodlink/shared-auth-util": ["libs/shared/auth/util/src/index.ts"],
+      "@foodlink/shared-core": ["libs/shared/core/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

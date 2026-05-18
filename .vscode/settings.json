@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
-        "commitlint"
+        "commitlint",
+        "foodlink"
     ],
     "tailwindCSS.includeLanguages": {
         "html": "html",

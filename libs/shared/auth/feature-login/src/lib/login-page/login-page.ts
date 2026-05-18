@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AuthService, LoginRequest } from '@foodlink/shared-auth-data-access';
+import { AuthService } from '@foodlink/shared-auth-data-access';
 import { LoginForm, AuthLayout } from "@foodlink/shared-auth-ui";
-
+import { LoginRequest } from '@foodlink/shared-auth-util'
 
 @Component({
   selector: 'lib-auth-login-page',

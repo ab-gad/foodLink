@@ -2,7 +2,7 @@
 import { inject, Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { injectMutation } from '@tanstack/angular-query-experimental';
-import { LoginRequest, AuthenticationResponse } from './models/auth.models';
+import { LoginRequest, AuthenticationResponse } from '@foodlink/shared-auth-util';
 import { lastValueFrom } from 'rxjs';
 import { ENV_CONFIG } from '@foodlink/shared-util'
 

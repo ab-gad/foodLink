@@ -5,7 +5,7 @@
   "implicitDependencies": ["shared-styles"],
   "prefix": "landing",
   "sourceRoot": "apps/landing/src",
-  "tags": [],
+  "tags": ["scope:landing", "type:app"],
   "targets": {
     "build": {
       "executor": "@angular/build:application",

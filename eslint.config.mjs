@@ -16,9 +16,63 @@ export default [
           enforceBuildableLibDependency: true,
           allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$'],
           depConstraints: [
+            // --- SCOPE BOUNDARIES ---
             {
-              sourceTag: '*',
-              onlyDependOnLibsWithTags: ['*'],
+              sourceTag: 'scope:admin',
+              onlyDependOnLibsWithTags: ['scope:admin', 'scope:shared'],
+            },
+            {
+              sourceTag: 'scope:donor',
+              onlyDependOnLibsWithTags: ['scope:donor', 'scope:shared'],
+            },
+            {
+              sourceTag: 'scope:charity',
+              onlyDependOnLibsWithTags: ['scope:charity', 'scope:shared'],
+            },
+            {
+              sourceTag: 'scope:landing',
+              onlyDependOnLibsWithTags: ['scope:landing', 'scope:shared'],
+            },
+            {
+              sourceTag: 'scope:shared',
+              onlyDependOnLibsWithTags: ['scope:shared'],
+            },
+
+            // --- TYPE BOUNDARIES ---
+            {
+              sourceTag: 'type:app',
+              onlyDependOnLibsWithTags: [
+                'type:feature',
+                'type:ui',
+                'type:data-access',
+                'type:util',
+                'type:core',
+              ],
+            },
+            {
+              sourceTag: 'type:core',
+              onlyDependOnLibsWithTags: ['type:data-access', 'type:util'],
+            },
+            {
+              sourceTag: 'type:feature',
+              onlyDependOnLibsWithTags: [
+                'type:feature',
+                'type:ui',
+                'type:data-access',
+                'type:util',
+              ],
+            },
+            {
+              sourceTag: 'type:ui',
+              onlyDependOnLibsWithTags: ['type:ui', 'type:util'],
+            },
+            {
+              sourceTag: 'type:data-access',
+              onlyDependOnLibsWithTags: ['type:data-access', 'type:util'],
+            },
+            {
+              sourceTag: 'type:util',
+              onlyDependOnLibsWithTags: ['type:util'],
             },
           ],
         },
@@ -28,14 +82,9 @@ export default [
   {
     files: ['**/*.ts'],
     rules: {
-      // 1. Enforce OnPush Change Detection
       '@angular-eslint/prefer-on-push-component-change-detection': 'error',
-
-      // 2. Enforce Standalone Components (Already default in v21, but good for safety)
       '@angular-eslint/prefer-standalone': 'error',
-
-      // 3. Ban @HostListener and @HostBinding in favor of 'host' object
-      '@angular-eslint/no-host-metadata-property': 'off', // Turn off the old rule to allow 'host' object
+      '@angular-eslint/no-host-metadata-property': 'off',
       'no-restricted-syntax': [
         'error',
         {
@@ -49,11 +98,16 @@ export default [
             "Do NOT use @HostBinding. Use the 'host' object in @Component or @Directive instead.",
         },
       ],
-
-      // 4. Clean Code: Ban 'any' and enforce 'unknown'
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+        },
+      ],
       '@typescript-eslint/no-explicit-any': 'error',
-
-      // 5. Enforce strict type checking
       '@typescript-eslint/explicit-function-return-type': [
         'warn',
         { allowExpressions: true },
@@ -63,7 +117,6 @@ export default [
   {
     files: ['**/*.html'],
     rules: {
-      // 6. Ban legacy control flow (*ngIf, *ngFor)
       '@angular-eslint/template/no-negated-async': 'error',
       // Note: As of now, there isn't a default lint rule to "hard ban" *ngIf,
       // but the team should strictly use @if/@for as per instructions.

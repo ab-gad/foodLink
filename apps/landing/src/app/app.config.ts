@@ -1,18 +1,13 @@
 import {
-  ApplicationConfig,
-  provideBrowserGlobalErrorListeners,
-} from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { appRoutes } from './app.routes';
-import {
   provideClientHydration,
   withEventReplay,
 } from '@angular/platform-browser';
 
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideClientHydration(withEventReplay()),
-    provideBrowserGlobalErrorListeners(),
-    provideRouter(appRoutes),
-  ],
-};
+import {
+  ApplicationConfig,
+} from '@angular/core';
+import { appRoutes } from './app.routes';
+import { environment } from '../environments/environment';
+import { createApplicationConfig } from '@foodlink/shared-core'
+
+export const appConfig: ApplicationConfig = createApplicationConfig({ routes: appRoutes, environment: environment, additionalProviders: [provideClientHydration(withEventReplay())] });

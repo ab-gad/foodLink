@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
-import { LoginRequest } from '@foodlink/shared-auth-data-access';
+import { LoginRequest } from '@foodlink/shared-auth-util';
 @Component({
   selector: 'lib-auth-ui-login-form',
   imports: [ReactiveFormsModule, RouterLink, HlmFieldImports, HlmInputImports, HlmButtonImports],

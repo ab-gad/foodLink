@@ -5,7 +5,7 @@
   "implicitDependencies": ["shared-styles"],
   "prefix": "charity",
   "sourceRoot": "apps/charity/src",
-  "tags": [],
+  "tags": ["scope:charity", "type:app"],
   "targets": {
     "build": {
       "executor": "@angular/build:application",

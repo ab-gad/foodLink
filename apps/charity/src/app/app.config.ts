@@ -1,10 +1,8 @@
 import {
   ApplicationConfig,
-  provideBrowserGlobalErrorListeners,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
+import { environment } from '../environments/environment';
+import { createApplicationConfig } from '@foodlink/shared-core'
 
-export const appConfig: ApplicationConfig = {
-  providers: [provideBrowserGlobalErrorListeners(), provideRouter(appRoutes)],
-};
+export const appConfig: ApplicationConfig = createApplicationConfig({ routes: appRoutes, environment: environment });

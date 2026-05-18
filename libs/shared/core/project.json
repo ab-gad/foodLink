@@ -1,10 +1,10 @@
 {
-  "name": "shared-util",
+  "name": "shared-core",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/shared/util/src",
+  "sourceRoot": "libs/shared/core/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["scope:shared", "type:util"],
+  "tags": ["scope:shared", "type:core"],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint"
