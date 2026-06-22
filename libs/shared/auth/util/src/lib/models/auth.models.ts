@@ -31,7 +31,7 @@ export interface AuthenticationResponse {
     id: string;
     name: string;
     email: string;
-    role: 'ADMIN' | 'DONOR' | 'CHARITY';
+    role: 'Admin' | 'Business' | 'Charity';
     profileImage: string | null;
     organizationName: string | null;
     token: string;

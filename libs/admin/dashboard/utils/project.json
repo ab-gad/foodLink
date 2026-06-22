@@ -1,0 +1,13 @@
+{
+  "name": "admin-dashboard-utils",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/admin/dashboard/utils/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["scope:admin", "type:util"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -159,7 +159,17 @@
       "@foodlink/shared-auth-ui": ["libs/shared/auth/ui/src/index.ts"],
       "@foodlink/shared-util": ["libs/shared/util/src/index.ts"],
       "@foodlink/shared-auth-util": ["libs/shared/auth/util/src/index.ts"],
-      "@foodlink/shared-core": ["libs/shared/core/src/index.ts"]
+      "@foodlink/shared-core": ["libs/shared/core/src/index.ts"],
+      "@foodlink/admin-dashboard-data-access": [
+        "libs/admin/dashboard/data-access/src/index.ts"
+      ],
+      "@foodlink/admin-dashboard-feature": [
+        "libs/admin/dashboard/feature/src/index.ts"
+      ],
+      "@foodlink/admin-dashboard-utils": [
+        "libs/admin/dashboard/utils/src/index.ts"
+      ],
+      "@foodlink/admin-dashboard-ui": ["libs/admin/dashboard/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

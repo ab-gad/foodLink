@@ -1,0 +1,199 @@
+<div class="space-y-8">
+  <div>
+    <h1
+      class="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50"
+    >
+      Dashboard Overview
+    </h1>
+    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+      Real-time metrics across your systemic rescue ecosystem.
+    </p>
+  </div>
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    @if (statsQuery.isLoading()) { @for (item of [1,2,3,4,5,6]; track $index) {
+    <div
+      class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 space-y-4 shadow-sm animate-pulse"
+    >
+      <div class="flex items-center justify-between">
+        <div class="h-4 w-28 bg-slate-200 dark:bg-slate-800 rounded"></div>
+        <div class="h-8 w-8 bg-slate-200 dark:bg-slate-800 rounded-full"></div>
+      </div>
+      <div class="space-y-2">
+        <div class="h-8 w-16 bg-slate-200 dark:bg-slate-800 rounded"></div>
+        <div class="h-3 w-40 bg-slate-100 dark:bg-slate-800/50 rounded"></div>
+      </div>
+    </div>
+    } } @else if (statsQuery.isError()) {
+    <div
+      class="col-span-full rounded-xl border border-red-200/50 bg-red-50/50 dark:bg-red-950/20 p-6 text-center text-red-600 dark:text-red-400"
+    >
+      Failed to parse real-time dashboard analytics. Please retry system
+      synchronization.
+    </div>
+    } @else { @let data = statsQuery.data();
+
+    <div
+      class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between pb-2">
+        <span
+          class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+          >Total Charities</span
+        >
+        <span
+          class="p-2 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-lg text-sm font-bold"
+          >🏛️</span
+        >
+      </div>
+      <div class="mt-4">
+        <span class="text-3xl font-bold tracking-tight"
+          >{{ data?.totalCharities }}</span
+        >
+        <p class="text-xs text-slate-400 mt-1">
+          Verified non-profit organizations
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between pb-2">
+        <span
+          class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+          >Active Businesses</span
+        >
+        <span
+          class="p-2 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 rounded-lg text-sm font-bold"
+          >🏢</span
+        >
+      </div>
+      <div class="mt-4">
+        <span class="text-3xl font-bold tracking-tight"
+          >{{ data?.totalBusinesses }}</span
+        >
+        <p class="text-xs text-slate-400 mt-1">Participating food providers</p>
+      </div>
+    </div>
+
+    <div
+      class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between pb-2">
+        <span
+          class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+          >Total Donations</span
+        >
+        <span
+          class="p-2 bg-green-50 dark:bg-green-950/40 text-green-600 dark:text-green-400 rounded-lg text-sm font-bold"
+          >📦</span
+        >
+      </div>
+      <div class="mt-4">
+        <span class="text-3xl font-bold tracking-tight"
+          >{{ data?.totalDonations }}</span
+        >
+        <div class="flex gap-3 mt-1 text-[11px] text-slate-400">
+          <span class="text-emerald-600 font-medium"
+            >● {{ data?.activeDonations }} Active</span
+          >
+          <span class="text-rose-500"
+            >● {{ data?.expiredDonations }} Expired</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between pb-2">
+        <span
+          class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+          >Total Reservations</span
+        >
+        <span
+          class="p-2 bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 rounded-lg text-sm font-bold"
+          >🤝</span
+        >
+      </div>
+      <div class="mt-4">
+        <span class="text-3xl font-bold tracking-tight"
+          >{{ data?.totalReservations }}</span
+        >
+        <p class="text-xs text-slate-400 mt-1">
+          All lifecycle allocation records
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between pb-2">
+        <span
+          class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+          >Reservation Status</span
+        >
+        <span
+          class="p-2 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-lg text-sm font-bold"
+          >⏳</span
+        >
+      </div>
+      <div class="mt-4">
+        <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-sm font-semibold">
+          <div
+            class="flex justify-between border-b py-0.5 border-slate-100 dark:border-slate-800"
+          >
+            <span class="text-slate-400 font-normal">Pending</span>
+            <span class="text-amber-500">{{ data?.pendingReservations }}</span>
+          </div>
+          <div
+            class="flex justify-between border-b py-0.5 border-slate-100 dark:border-slate-800"
+          >
+            <span class="text-slate-400 font-normal">Picked Up</span>
+            <span class="text-emerald-500"
+              >{{ data?.pickedUpReservations }}</span
+            >
+          </div>
+        </div>
+        <p class="text-[10px] text-slate-400 mt-2 uppercase tracking-wide">
+          Live tracking telemetry
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between pb-2">
+        <span
+          class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+          >No-Show Violations</span
+        >
+        <span
+          class="p-2 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 rounded-lg text-sm font-bold"
+          >⚠️</span
+        >
+      </div>
+      <div class="mt-4">
+        <span
+          class="text-3xl font-bold text-rose-600 dark:text-rose-400 tracking-tight"
+          >{{ data?.noShowReservations }}</span
+        >
+        <p class="text-xs text-slate-400 mt-1">Missed pick-up intervals</p>
+      </div>
+    </div>
+    }
+  </div>
+  <hlm-separator />
+  <lib-admin-dashboard-charts
+    [stats]="statsQuery.data()"
+    [isLoading]="statsQuery.isLoading()"
+  />
+  <hlm-separator />
+  <lib-admin-dashboard-recent-users-table
+    [users]="usersQuery.data()?.items"
+    [isLoading]="usersQuery.isLoading()"
+  />
+</div>

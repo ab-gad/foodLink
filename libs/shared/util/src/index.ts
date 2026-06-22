@@ -1,3 +1,6 @@
+export * from './lib/enums/user-role.enum';
+export * from './lib/models/pagination-request';
+export * from './lib/models/paged-response';
 export * from './lib/config/app-config.model';
 export * from './lib/config/app-config.token';
 export * from './lib/config/http-context-tokens';

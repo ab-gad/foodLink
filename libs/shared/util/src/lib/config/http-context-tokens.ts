@@ -4,6 +4,7 @@ export const SHOW_GLOBAL_LOADER = new HttpContextToken<boolean>(() => false);
 
 export interface ToastPromiseConfig {
     loading?: string;
+    hideError?: boolean;
     success: string;
     error: string | ((err: HttpErrorResponse) => string);
 }

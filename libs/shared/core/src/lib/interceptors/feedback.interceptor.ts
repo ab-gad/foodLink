@@ -21,7 +21,6 @@ export const feedbackInterceptor: HttpInterceptorFn = (req, next) => {
     if (toastConfig?.loading) {
         toastId = toast.loading(toastConfig.loading, { dismissible: false, duration: 10000, position: 'bottom-center' });
     }
-
     return next(req).pipe(
         tap({
             next: (event) => {
@@ -33,13 +32,12 @@ export const feedbackInterceptor: HttpInterceptorFn = (req, next) => {
                 }
             },
             error: (err: HttpErrorResponse) => {
-                if (toastConfig?.error) {
-                    const customError = toastConfig.error || (err.error.message || err.message) as string;
-                    const errorMsg = typeof customError === 'function' ? customError(err) : customError;
-                    timer(MIN_DELAY).subscribe(() => {
-                        toast.error(errorMsg, { id: toastId ?? undefined, position: 'bottom-center' });
-                    });
-                }
+                if (toastConfig?.hideError) return;
+                const customError = toastConfig?.error || (err.error?.message || err.message) as string;
+                const errorMsg = typeof customError === 'function' ? customError(err) : customError;
+                timer(MIN_DELAY).subscribe(() => {
+                    toast.error(errorMsg, { id: toastId ?? undefined, position: 'bottom-center' });
+                });
             }
         }),
         finalize(() => {

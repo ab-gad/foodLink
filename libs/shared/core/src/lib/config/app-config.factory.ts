@@ -7,7 +7,7 @@ import { errorInterceptor } from '../interceptors/error.interceptor';
 import { authInterceptor } from '../interceptors/auth.interceptor';
 import { withDevtools } from '@tanstack/angular-query-experimental/devtools'
 import { feedbackInterceptor } from '../interceptors/feedback.interceptor';
-
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 export interface AppConfigOptions {
     routes: Routes;
     environment: EnvironmentConfig;
@@ -22,7 +22,7 @@ export function createApplicationConfig(options: AppConfigOptions): ApplicationC
             provideBrowserGlobalErrorListeners(),
             provideRouter(routes, withComponentInputBinding()),
             provideHttpClient(
-                withInterceptors([authInterceptor, errorInterceptor, feedbackInterceptor])
+                withInterceptors([authInterceptor, feedbackInterceptor, errorInterceptor])
             ),
             provideTanStackQuery(
                 new QueryClient({
@@ -61,6 +61,7 @@ export function createApplicationConfig(options: AppConfigOptions): ApplicationC
                 provide: ENV_CONFIG,
                 useValue: environment,
             },
+            provideCharts(withDefaultRegisterables()),
             ...additionalProviders,
         ],
     };
