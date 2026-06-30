@@ -1,0 +1,237 @@
+<div class="w-full max-w-7xl mx-auto p-6 space-y-6">
+  <div
+    class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4"
+  >
+    <div class="flex items-center gap-4">
+      <button
+        hlmBtn
+        variant="outline"
+        size="sm"
+        class="flex items-center gap-2"
+        (click)="goBack()"
+      >
+        <ng-icon name="lucideArrowLeft" /> Back
+      </button>
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400"
+          >System Ledger Entry</span
+        >
+        <h1
+          class="text-xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight"
+        >
+          Reservation Log: #{{ reservation()?.id || 'Unknown' }}
+        </h1>
+      </div>
+    </div>
+
+    @if (reservation()) {
+    <span
+      class="px-3 py-1 rounded-full text-xs font-bold border capitalize shadow-sm"
+      [ngClass]="{
+              'bg-emerald-50 text-emerald-700 border-emerald-200': reservation()!.status === 'PickedUp',
+              'bg-rose-50 text-rose-700 border-rose-200': reservation()!.status === 'NoShow',
+              'bg-amber-50 text-amber-700 border-amber-200': reservation()!.status === 'Cancelled',
+              'bg-slate-50 text-slate-700 border-slate-200': reservation()!.status === 'Expired'
+            }"
+    >
+      {{ reservation()!.status }}
+    </span>
+    }
+  </div>
+
+  @if (reservation()) {
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-1 space-y-6">
+      <div
+        hlmCard
+        class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm rounded-xl overflow-hidden"
+      >
+        <div
+          class="relative h-32 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800"
+        >
+          <img
+            alt=""
+            [src]="reservation()!.donation.imageUrl"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div class="p-5 space-y-4">
+          <div>
+            <h3
+              class="text-xs font-bold uppercase tracking-wide text-blue-600 dark:text-blue-400"
+            >
+              Sourcing Provider
+            </h3>
+            <p
+              class="text-base font-bold text-slate-900 dark:text-slate-100 mt-0.5"
+            >
+              {{ reservation()!.donation.title }}
+            </p>
+          </div>
+          <div
+            class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-3"
+          >
+            <ng-icon
+              name="lucideBuilding2"
+              class="text-slate-400 text-lg shrink-0"
+            />
+            <div>
+              <p class="text-xs font-medium text-slate-400">
+                Business Registry Name
+              </p>
+              <p class="font-semibold text-slate-800 dark:text-slate-200">
+                {{ reservation()!.donation.businessName }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        hlmCard
+        class="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm rounded-xl space-y-4"
+      >
+        <div class="flex items-center gap-2">
+          <ng-icon name="lucideUser" class="text-slate-400 text-lg" />
+          <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100">
+            Claimant Organization
+          </h3>
+        </div>
+        <div
+          class="bg-slate-50 dark:bg-slate-950 p-4 rounded-lg border border-slate-100 dark:border-slate-800"
+        >
+          <p class="text-xs font-medium text-slate-400">
+            Registered Non-Profit Entity
+          </p>
+          <p
+            class="text-sm font-bold text-slate-800 dark:text-slate-200 mt-0.5"
+          >
+            {{ reservation()!.charity.name }}
+          </p>
+          <p class="text-[10px] text-slate-400 mt-1">
+            ID Hash: {{ reservation()!.charity.id }}
+          </p>
+        </div>
+      </div>
+
+      <div
+        hlmCard
+        class="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm rounded-xl space-y-4"
+      >
+        <div class="flex items-center gap-2">
+          <ng-icon name="lucideClock" class="text-slate-400 text-lg" />
+          <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100">
+            Chronological Logs
+          </h3>
+        </div>
+        <div class="space-y-3 text-sm">
+          <div
+            class="flex justify-between items-center py-1.5 border-b border-slate-100 dark:border-slate-800"
+          >
+            <span class="text-slate-500 font-medium flex items-center gap-2"
+              ><ng-icon name="lucideCalendar" /> Reservation Deadline</span
+            >
+            <span class="font-semibold text-slate-900 dark:text-slate-100"
+              >{{ reservation()!.expiresAt | date:'medium' }}</span
+            >
+          </div>
+          @if (reservation()!.pickedUpAt) {
+          <div
+            class="flex justify-between items-center py-1.5 border-b border-slate-100 dark:border-slate-800"
+          >
+            <span class="text-emerald-600 font-medium flex items-center gap-2"
+              ><ng-icon name="lucideCalendar" /> Verified Handshake</span
+            >
+            <span class="font-semibold text-emerald-700 dark:text-emerald-400"
+              >{{ reservation()!.pickedUpAt | date:'medium' }}</span
+            >
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-2 space-y-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2
+            class="text-lg font-bold text-slate-900 dark:text-slate-50 tracking-tight"
+          >
+            Consolidated Freight Items
+          </h2>
+          <p class="text-xs text-slate-500">
+            Breakdown allocation metrics for the requested distribution package.
+          </p>
+        </div>
+        <div class="text-right">
+          <p class="text-xs font-bold uppercase text-slate-400">
+            Total Unit Load
+          </p>
+          <p class="text-xl font-black text-slate-900 dark:text-slate-100">
+            {{ reservation()!.totalQuantity }} Items
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        @for (item of reservation()!.items; track item.donationItemId) {
+        <div
+          hlmCard
+          class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex items-center justify-between"
+        >
+          <div class="flex items-center gap-3.5">
+            <div
+              class="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0"
+            >
+              <ng-icon name="lucidePackage" class="text-xl" />
+            </div>
+            <div>
+              <h4
+                class="font-bold text-sm text-slate-900 dark:text-slate-100 tracking-tight"
+              >
+                {{ item.itemName }}
+              </h4>
+              <p class="text-xs font-semibold text-slate-400 uppercase mt-0.5">
+                Tracking Key: {{ item.donationItemId }}
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="text-right shrink-0 bg-slate-50 dark:bg-slate-950 px-3 py-2 rounded-lg border border-slate-100 dark:border-slate-800"
+          >
+            <span
+              class="block text-lg font-black text-slate-900 dark:text-slate-50 leading-none"
+              >{{ item.quantity }}</span
+            >
+            <span
+              class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mt-1"
+              >{{ item.unit }}</span
+            >
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  } @else {
+  <div
+    hlmCard
+    class="p-12 text-center bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl space-y-4"
+  >
+    <div class="max-w-md mx-auto space-y-2">
+      <h3 class="text-base font-bold text-slate-900 dark:text-slate-100">
+        State Vector Expired
+      </h3>
+      <p class="text-xs text-slate-500">
+        The navigation session object state cache was flushed due to a hot
+        browser tab reload sequence. Please navigate from the dashboard ledger
+        table stream.
+      </p>
+    </div>
+    <button hlmBtn variant="outline" size="sm" (click)="goBack()">
+      Return to Logs
+    </button>
+  </div>
+  }
+</div>
