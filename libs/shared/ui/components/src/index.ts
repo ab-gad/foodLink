@@ -6,3 +6,7 @@ export * from './lib/layout/nav-user';
 export * from './lib/layout/sidebar';
 export * from './lib/layout/site-header';
 export * from './lib/models/sidebar-data';
+export * from './lib/action-dropdown';
+export * from './lib/sort-header-btn';
+export * from './lib/user-avatar';
+export * from './lib/custom-pie-chart';

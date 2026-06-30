@@ -1,0 +1,28 @@
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideArrowUpDown } from '@ng-icons/lucide';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+
+import { type HeaderContext, injectFlexRenderContext } from '@tanstack/angular-table';
+
+@Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [HlmButtonImports, NgIcon],
+    providers: [provideIcons({ lucideArrowUpDown })],
+    template: `
+		<button hlmBtn class="p-0" size="sm" variant="ghost" (click)="filterClick()" [class.capitalize]="header() === ''">
+			{{ _header() }}
+			<ng-icon name="lucideArrowUpDown" />
+		</button>
+	`,
+})
+export class TableHeadSortButton<T> {
+    protected readonly _context = injectFlexRenderContext<HeaderContext<T, unknown>>();
+    protected filterClick(): void {
+        this._context.column.toggleSorting(this._context.column.getIsSorted() === 'asc');
+    }
+    public readonly header = input('');
+    protected readonly _header = computed(() => {
+        return this.header() === '' ? this._context.column.id : this.header();
+    });
+}
