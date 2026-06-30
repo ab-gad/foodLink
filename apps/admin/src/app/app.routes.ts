@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { AdminShellComponent } from './components/admin-layout';
-import { adminGuard, guestGuard } from '@foodlink/shared-core';
+import { adminGuard, guestGuard, stateRequiredGuard, StateRequiredRouteData } from '@foodlink/shared-core';
 export const appRoutes: Routes = [
     {
         path: 'login',
@@ -11,7 +11,7 @@ export const appRoutes: Routes = [
     {
         path: '',
         component: AdminShellComponent,
-        canActivate: [adminGuard],       // Secure all child routes globally right here
+        canActivate: [adminGuard],
         children: [
             {
                 path: 'dashboard',
@@ -20,7 +20,60 @@ export const appRoutes: Routes = [
             },
             {
                 path: 'users',
+                title: 'Users',
                 loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.AdminUsersPage)
+            },
+            {
+                path: 'charities',
+                title: 'Charities',
+                loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.AdminCharitiesPage),
+            },
+            {
+                path: 'charities/:id',
+                canActivate: [stateRequiredGuard],
+                loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.AdminCharityProfile),
+                children: [
+                    {
+                        path: '',
+                        pathMatch: 'full',
+                        redirectTo: 'info'
+                    },
+                    {
+                        title: 'Charity Profile',
+                        path: 'info',
+                        loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.AdminCharityProfileInfo),
+                    },
+                    {
+                        title: 'Charity Reservation',
+                        path: 'reservations',
+                        loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.ReservationsTableComponent),
+                    }
+                ]
+            },
+            {
+                path: 'reservations',
+                title: 'Reservations',
+                loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.ReservationsTableComponent),
+            },
+            {
+                path: 'reservations/:id',
+                title: 'Reservation Details',
+                canActivate: [stateRequiredGuard],
+                data: {
+                    requiredStateKey: 'reservation',
+                } as StateRequiredRouteData,
+                loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.ReservationDetailsComponent),
+            },
+            {
+                path: 'businesses',
+                title: 'Businesses',
+                loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.AdminBusinessesPage),
+            },
+            {
+                path: 'businesses/:id',
+                title: 'Business Profile',
+                canActivate: [stateRequiredGuard],
+                loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.AdminBusinessProfile)
             },
             {
                 path: '',

@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { AuthService } from '@foodlink/shared-auth-data-access';
 import { SidebarData, SidebarInsetPage } from '@foodlink/shared-ui-components';
 import { provideIcons } from '@ng-icons/core';
-import { lucideLayoutDashboard, lucideUsers } from '@ng-icons/lucide';
+import { lucideLayoutDashboard, lucideUsers, lucideHeartHandshake, lucideBuilding2, lucidePackage } from '@ng-icons/lucide';
 
 @Component({
   selector: 'admin-shell',
@@ -12,7 +12,10 @@ import { lucideLayoutDashboard, lucideUsers } from '@ng-icons/lucide';
   providers: [
     provideIcons({
       lucideLayoutDashboard,
-      lucideUsers
+      lucideUsers,
+      lucideHeartHandshake,
+      lucideBuilding2,
+      lucidePackage,
     }),
   ],
   template: `
@@ -36,18 +39,50 @@ export class AdminShellComponent {
       },
       navMain: [
         {
-          title: 'Dashboard',
-          icon: 'lucideLayoutDashboard',
-          url: '/dashboard',
+          groupName: 'Dashboard',
+          groupItems: [
+            {
+              title: 'Admin Dashboard',
+              icon: 'lucideLayoutDashboard',
+              url: '/dashboard',
+            },
+          ]
         },
         {
-          title: 'Users',
-          icon: 'lucideUsers',
-          url: '/users',
+          groupName: 'Users',
+          groupItems: [
+            {
+              title: 'All Users',
+              icon: 'lucideUsers',
+              url: '/users',
+            },
+            {
+              title: 'Charities',
+              icon: 'lucideHeartHandshake',
+              url: '/charities',
+            },
+            {
+              title: 'Businesses',
+              icon: 'lucideBuilding2',
+              url: '/businesses',
+            },
+          ]
+        },
+        {
+          groupName: 'Donation & Reservations',
+          groupItems: [
+            {
+              title: 'Reservations',
+              icon: 'lucidePackage',
+              url: '/reservations',
+            },
+          ]
         }
       ],
-      navSecondary: [],
-      projects: []
+      navSecondary: [
+      ],
+      projects: [
+      ]
     });
   }
 }

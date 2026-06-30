@@ -1,10 +1,4 @@
-export interface ChartItem {
-    label: string;
-    value: number;
-    percentage: number;
-    color: string;
-}
-
+import { ChartItem } from "@foodlink/shared-util";
 export interface DashboardChartsData {
     reservations: {
         total: number;

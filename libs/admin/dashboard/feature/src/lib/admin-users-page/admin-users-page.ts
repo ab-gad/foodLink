@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,36 +15,39 @@ import {
   createAngularTable,
   ColumnDef,
   Table,
+  flexRenderComponent,
+  FlexRenderDirective,
+  getFilteredRowModel,
+  ColumnFiltersState,
+  SortingState,
+  RowSelectionState,
+  VisibilityState,
 } from '@tanstack/angular-table';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
-import { lucideChevronDown } from '@ng-icons/lucide';
+import { lucideChevronDown, lucideUserRoundX, lucideUserRoundCheck } from '@ng-icons/lucide';
+import { ActionDropdown, TableHeadSortButton, UserAvatar } from "@foodlink/shared-ui-components"
+import { HlmTableImports } from '@spartan-ng/helm/table';
+import { injectMutation, injectQuery } from '@tanstack/angular-query-experimental';
 
-// interface UserActionEvent extends Event {
-//   detail: {
-//     id: string;
-//     suspended: boolean;
-//   };
-// }
+
 @Component({
   selector: 'lib-admin-users-page',
   standalone: true,
-  imports: [CommonModule, NgIcon, HlmDropdownMenuImports, HlmButtonImports],
-  providers: [AdminDashboardService, provideIcons({ lucideChevronDown })],
+  imports: [CommonModule, NgIcon, HlmDropdownMenuImports, HlmButtonImports, HlmTableImports, FlexRenderDirective],
+  providers: [DatePipe, provideIcons({ lucideChevronDown, lucideUserRoundX, lucideUserRoundCheck })],
   templateUrl: './admin-users-page.html',
   styleUrl: './admin-users-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // host: {
-  //   '(window:user-action)': 'onUserAction($event)'
-  // }
 })
 export class AdminUsersPage {
   private readonly dashboardService = inject(AdminDashboardService);
+  private readonly datePipe = inject(DatePipe);
 
-  protected readonly usersQuery = this.dashboardService.getAllUsers;
-  private readonly suspendMutation = this.dashboardService.suspendUser;
-  private readonly reactivateMutation = this.dashboardService.reactivateUser;
+  protected readonly usersQuery = injectQuery(() => this.dashboardService.getAllUsersOptions());
+  private readonly suspendMutation = injectMutation(() => this.dashboardService.suspendUserOptions());
+  private readonly reactivateMutation = injectMutation(() => this.dashboardService.reactivateUserOptions());
 
   // Reactivity State Parameters
   protected readonly $globalFilter = signal<string>('');
@@ -67,36 +70,83 @@ export class AdminUsersPage {
       return matchesSearch && matchesRole;
     });
   });
+  private readonly _columnFilters = signal<ColumnFiltersState>([]);
+  private readonly _sorting = signal<SortingState>([]);
+  private readonly _rowSelection = signal<RowSelectionState>({});
+  private readonly _columnVisibility = signal<VisibilityState>({});
 
-  private readonly columns: ColumnDef<AdminUserResponse>[] = [
+  protected readonly columns: ColumnDef<AdminUserResponse>[] = [
     {
-      id: 'Name', // 👈 Explicit text identifier strings
+      id: 'Avatar',
+      accessorKey: 'profileImage',
+      header: 'Avatar',
+      enableSorting: false,
+      cell: (context) => flexRenderComponent(UserAvatar, { inputs: { image: context.row.original.profileImage, fallbackText: context.row.original.name } }),
+    },
+    {
+      id: 'Name',
       accessorKey: 'name',
-      header: 'Name',
+      header: () =>
+        flexRenderComponent(TableHeadSortButton<AdminUserResponse>, { inputs: { header: '' } }),
+      cell: (context) => `<span class="text-slate-900 dark:text-slate-100">${context.getValue<string>()}</span>`,
     },
     {
       id: 'Type',
       accessorKey: 'role',
-      header: 'Type',
+      header: () =>
+        flexRenderComponent(TableHeadSortButton<AdminUserResponse>, { inputs: { header: '' } }),
+      cell: (context) => {
+        let role = context.getValue<string>();
+        role = role === '0' ? 'Admin' : role;
+        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-50 text-blue-600 border border-blue-100 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/30">${role}</span>`
+      },
+
     },
     {
       id: 'Email',
       accessorKey: 'email',
-      header: 'Email',
+      header: () =>
+        flexRenderComponent(TableHeadSortButton<AdminUserResponse>, { inputs: { header: '' } }),
+      cell: (context) => `<span>${context.getValue<string>()}</span>`,
     },
     {
       id: 'Registered At',
       accessorKey: 'createdAt',
-      header: 'Registered At',
+      header: () =>
+        flexRenderComponent(TableHeadSortButton<AdminUserResponse>, { inputs: { header: '' } }),
+      cell: (context) => {
+        const dateStr = context.getValue<string>();
+        const date = this.datePipe.transform(dateStr, 'mediumDate') || new Date(dateStr).toLocaleDateString();
+        return `<span>${date}</span>`
+      },
     },
     {
       id: 'Status',
       accessorKey: 'isSuspended',
-      header: 'Status',
+      header: () =>
+        flexRenderComponent(TableHeadSortButton<AdminUserResponse>, { inputs: { header: '' } }),
+      cell: (context) => {
+        const isSuspended = Boolean(context.getValue<string>());
+        const statusClass = isSuspended ? 'bg-rose-50 text-rose-600 border border-rose-100 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-900/20' : 'bg-emerald-50 text-emerald-600 border border-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/20';
+        const statusText = isSuspended ? 'Suspended' : 'Active';
+        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold ${statusClass}">${statusText}</span>`
+      }
     },
     {
-      id: 'Actions', // Keep it untoggled if you want actions to remain persistent
+      id: 'Actions',
       header: 'Actions',
+      enableSorting: false,
+      enableHiding: false,
+      cell: (context) =>
+        flexRenderComponent(ActionDropdown<AdminUserResponse>, {
+          inputs: {
+            contextInstance: context.row.original,
+            actions: [
+              { label: 'Activate', id: 'activate', icon: 'lucideUserRoundCheck', clickFn: (user) => this.toggleSuspension(user.id, true), disableFn: (user) => !user.isSuspended },
+              { label: 'Suspend', id: 'suspend', icon: 'lucideUserRoundX', clickFn: (user) => this.toggleSuspension(user.id, false), disableFn: (user) => user.isSuspended },
+            ]
+          },
+        }),
     }
   ];
   // Initialize the TanStack Angular Table core wrapper engine
@@ -107,12 +157,46 @@ export class AdminUsersPage {
       getCoreRowModel: getCoreRowModel(),
       getPaginationRowModel: getPaginationRowModel(),
       getSortedRowModel: getSortedRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
       initialState: {
         pagination: { pageSize: 10, pageIndex: 0 },
       },
+      onSortingChange: (updater) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        updater instanceof Function
+          ? this._sorting.update(updater)
+          : this._sorting.set(updater);
+      },
+      onColumnFiltersChange: (updater) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        updater instanceof Function
+          ? this._columnFilters.update(updater)
+          : this._columnFilters.set(updater);
+      },
+      onColumnVisibilityChange: (updater) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        updater instanceof Function
+          ? this._columnVisibility.update(updater)
+          : this._columnVisibility.set(updater);
+      },
+      onRowSelectionChange: (updater) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        updater instanceof Function
+          ? this._rowSelection.update(updater)
+          : this._rowSelection.set(updater);
+      },
+      state: {
+        sorting: this._sorting(),
+        columnFilters: this._columnFilters(),
+        columnVisibility: this._columnVisibility(),
+        rowSelection: this._rowSelection(),
+      }
     }),
   );
 
+  protected readonly hidableColumns = this.table
+    .getAllColumns()
+    .filter((column) => column.getCanHide());
   // Handle Global Text Filter Inputs
   protected updateFilter(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -127,14 +211,6 @@ export class AdminUsersPage {
     this.table.setPageIndex(0);
   }
 
-  // protected onUserAction(event: Event): void {
-  //   const { id, suspended } = (event as UserActionEvent).detail;
-  //   if (suspended) {
-  //     this.reactivateMutation.mutate(id);
-  //   } else {
-  //     this.suspendMutation.mutate(id);
-  //   }
-  // }
   protected toggleSuspension(id: string, currentlySuspended: boolean): void {
     if (currentlySuspended) {
       this.reactivateMutation.mutate(id);

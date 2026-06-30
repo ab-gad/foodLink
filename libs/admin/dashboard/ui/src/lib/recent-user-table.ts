@@ -66,15 +66,10 @@ import { RouterLink } from '@angular/router';
                   </td>
 
                   <td class="py-3.5 px-4">
-                    @if (getNormalizedRole(user.role) === 'Charity') {
-                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/30">
-                        Charity
-                      </span>
-                    } @else {
-                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-green-50 dark:bg-green-950/40 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30">
-                        Restaurant
-                      </span>
-                    }
+                    @let role = getNormalizedRole(user.role);
+                    <span [class]="getRoleColor(role)" class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium">
+                      {{role}}
+                    </span>
                   </td>
 
                   <td class="py-3.5 px-4 text-slate-500 dark:text-slate-400 font-mono text-xs">
@@ -112,9 +107,21 @@ export class RecentUsersTableComponent {
   isLoading = input<boolean>(false);
 
   /** Helper to safely resolve enums or incoming string representations from backend payload mapping context */
-  protected getNormalizedRole(role: string | number): 'Charity' | 'Restaurant' {
+  protected getNormalizedRole(role: string | number): 'Charity' | 'Business' | 'Admin' {
     const roleStr = String(role).toUpperCase();
+    if (roleStr.includes('0')) return 'Admin';
     if (roleStr.includes('CHARITY')) return 'Charity';
-    return 'Restaurant'; // Maps back seamlessly to Business/Restaurant logic
+    return 'Business'; // Maps back seamlessly to Business/Restaurant logic
+  }
+
+  protected getRoleColor(role: 'Charity' | 'Business' | 'Admin'): string {
+    switch (role) {
+      case 'Charity':
+        return 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/30';
+      case 'Business':
+        return 'bg-green-50 dark:bg-green-950/40 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30';
+      case 'Admin':
+        return 'bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400';
+    }
   }
 }

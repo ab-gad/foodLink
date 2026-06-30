@@ -36,18 +36,13 @@
           <option value="RESTAURANT">Restaurants Only</option>
         </select>
       </div>
-      <button
-        hlmBtn
-        variant="outline"
-        align="end"
-        [hlmDropdownMenuTrigger]="menu"
-      >
+      <button hlmBtn variant="outline" [hlmDropdownMenuTrigger]="menu">
         Columns
         <ng-icon name="lucideChevronDown" class="ml-2" />
       </button>
       <ng-template #menu>
         <hlm-dropdown-menu class="w-32">
-          @for (column of table.getAllColumns(); track column.id) {
+          @for (column of hidableColumns; track column.id) {
           <button
             hlmDropdownMenuCheckbox
             class="capitalize"
@@ -98,125 +93,47 @@
       System mapping timeout error. Could not build data grid parameters safely.
     </div>
     } @else {
-    <div class="overflow-x-auto">
-      <table class="w-full text-left border-collapse text-sm">
-        <thead>
-          @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
-          <tr
-            class="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider"
-          >
-            @for (header of headerGroup.headers; track header.id) {
-            <th
-              class="py-3.5 px-4 font-medium select-none cursor-pointer hover:bg-slate-100/50 dark:hover:bg-slate-800/60"
-              (click)="header.column.toggleSorting()"
-            >
-              <div class="flex items-center gap-1.5">
-                <span>{{ header.column.columnDef.header }}</span>
 
-                @if (header.column.getIsSorted() === 'asc') {
-                <span class="text-[10px]">▲</span> } @if
-                (header.column.getIsSorted() === 'desc') {
-                <span class="text-[10px]">▼</span> }
-              </div>
+    <div hlmTableContainer>
+      <table hlmTable>
+        <thead hlmTHead>
+          @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+          <tr hlmTr>
+            @for (header of headerGroup.headers; track header.id) {
+            <th hlmTh [attr.colSpan]="header.colSpan">
+              @if (!header.isPlaceholder) {
+              <ng-container
+                *flexRender="header.column.columnDef.header; props: header.getContext(); let headerText"
+              >
+                <div [innerHTML]="headerText"></div>
+              </ng-container>
+              }
             </th>
             }
           </tr>
           }
         </thead>
-        <tbody
-          class="divide-y divide-slate-100 dark:divide-slate-800/60 text-slate-700 dark:text-slate-300"
-        >
-          @for (row of table.getRowModel().rows; track row.id) { @let user =
-          row.original;
-
+        <tbody hlmTBody>
+          @for (row of table.getRowModel().rows; track row.id) {
           <tr
-            class="hover:bg-slate-50/50 dark:hover:bg-slate-800/10 transition-colors"
+            hlmTr
+            [attr.key]="row.id"
+            [attr.data-state]="row.getIsSelected() && 'selected'"
           >
-            <td class="py-3.5 px-4 align-middle font-medium">
-              <div class="flex items-center gap-3">
-                <div
-                  class="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 shrink-0 overflow-hidden flex items-center justify-center border border-slate-200 dark:border-slate-700"
-                >
-                  @if (user.profileImage) {
-                  <img
-                    [src]="user.profileImage"
-                    [alt]="user.name"
-                    class="w-full h-full object-cover"
-                  />
-                  } @else {
-                  <span class="text-xs font-bold text-slate-400 uppercase"
-                    >{{ user.name.slice(0,2) }}</span
-                  >
-                  }
-                </div>
-                <span class="text-slate-900 dark:text-slate-100"
-                  >{{ user.name }}</span
-                >
-              </div>
+            @for (cell of row.getVisibleCells(); track $index) {
+            <td hlmTd>
+              <ng-container
+                *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let cell"
+              >
+                <div [innerHTML]="cell"></div>
+              </ng-container>
             </td>
-
-            <td class="py-3.5 px-4 align-middle">
-              @if (user.role.toLowerCase().includes('charity')) {
-              <span
-                class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-50 text-blue-600 border border-blue-100 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/30"
-              >
-                Charity
-              </span>
-              } @else {
-              <span
-                class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-green-50 text-green-600 border border-green-100 dark:bg-green-950/40 dark:text-green-400 dark:border-green-900/30"
-              >
-                Restaurant
-              </span>
-              }
-            </td>
-
-            <td
-              class="py-3.5 px-4 align-middle font-mono text-xs text-slate-500 dark:text-slate-400"
-            >
-              {{ user.email }}
-            </td>
-
-            <td
-              class="py-3.5 px-4 align-middle text-slate-500 dark:text-slate-400"
-            >
-              {{ user.createdAt | date:'mediumDate' }}
-            </td>
-
-            <td class="py-3.5 px-4 align-middle">
-              @if (user.isSuspended) {
-              <span
-                class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-rose-50 text-rose-600 border border-rose-100 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-900/20"
-              >
-                Suspended
-              </span>
-              } @else {
-              <span
-                class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-600 border border-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/20"
-              >
-                Active
-              </span>
-              }
-            </td>
-
-            <td class="py-3.5 px-4 align-middle">
-              @if (user.isSuspended) {
-              <!-- onclick="window.dispatchEvent(new CustomEvent('user-action', { detail: { id: user.id, suspended: true } }))" -->
-              <button
-                (click)="toggleSuspension(user.id, true)"
-                class="hlm-btn size-sm variant-outline border-emerald-200 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:border-emerald-800/60 dark:bg-emerald-950/20 dark:text-emerald-400"
-              >
-                Reactivate
-              </button>
-              } @else {
-              <!-- onclick="window.dispatchEvent(new CustomEvent('user-action', { detail: { id: user.id, suspended: false } }))" -->
-              <button
-                (click)="toggleSuspension(user.id, false)"
-                class="hlm-btn size-sm variant-destructive"
-              >
-                Suspend
-              </button>
-              }
+            }
+          </tr>
+          } @empty {
+          <tr hlmTr>
+            <td hlmTd class="h-24 text-center" [attr.colspan]="columns.length">
+              No results.
             </td>
           </tr>
           }
