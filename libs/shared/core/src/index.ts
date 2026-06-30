@@ -4,5 +4,7 @@ export * from './lib/interceptors/feedback.interceptor';
 export * from './lib/components/top-loader-overlay';
 export * from './lib/guards/auth.guard';
 export * from './lib/guards/guest.guard';
+export * from './lib/guards/state-required.guard';
 export * from './lib/services/global-loader.service';
+export * from './lib/config/app-config.factory';
 export * from './lib/config/app-config.factory';
