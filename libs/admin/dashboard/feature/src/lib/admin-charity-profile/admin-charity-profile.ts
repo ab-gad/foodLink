@@ -31,12 +31,10 @@ import { filter, map } from 'rxjs';
 export class AdminCharityProfile {
   private readonly router = inject(Router);
 
-  // Extract data from history state safely
   protected readonly charity = signal<AdminCharityResponse | null>(
     (this.router.currentNavigation()?.extras.state?.['charity'] || history.state?.['charity']) ?? null
   );
 
-  // 2. Reactively track the URL to toggle the button styles safely under OnPush
   private readonly currentUrl = toSignal(
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
@@ -45,7 +43,6 @@ export class AdminCharityProfile {
     { initialValue: this.router.url }
   );
 
-  // 3. Programmatic navigator that forces the state payload into the target sub-route
   protected navigateToTab(tabPath: string, title: string): void {
     const data = this.charity();
     if (!data) return;
@@ -55,7 +52,6 @@ export class AdminCharityProfile {
     });
   }
 
-  // Helper to verify which button is currently active
   protected isTabActive(tabPath: string): boolean {
     return this.currentUrl().endsWith(`/${tabPath}`);
   }

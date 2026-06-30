@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { QueryClient } from '@tanstack/angular-query-experimental';
 import { ENV_CONFIG, PagedResponse, TOAST_PROMISE_CONFIG } from '@foodlink/shared-util';
-import { AdminBusinessResponse, AdminCharityResponse, AdminUserResponse, DashboardStats, Reservation } from '@foodlink/admin-dashboard-utils';
+import { AdminBusinessResponse, AdminCharityResponse, AdminDonationResponse, AdminUserResponse, DashboardStats, Reservation } from '@foodlink/admin-dashboard-utils';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable({
@@ -100,7 +100,7 @@ export class AdminDashboardService {
     getBusinessDonationsOptions(businessId: string, page = 1, pageSize = 100) {
         return {
             queryKey: ['admin', 'business-donations-list', businessId, page, pageSize] as const,
-            queryFn: () => lastValueFrom(this.http.get<PagedResponse<AdminCharityResponse>>(`${this.config.apiUrl}/admin/charities/${businessId}/reservations`, {
+            queryFn: () => lastValueFrom(this.http.get<PagedResponse<AdminDonationResponse>>(`${this.config.apiUrl}/admin/businesses/${businessId}/donations`, {
                 params: {
                     page: String(page),
                     pageSize: String(pageSize),
@@ -112,7 +112,7 @@ export class AdminDashboardService {
     getAllDonationsOptions(page = 1, pageSize = 100) {
         return {
             queryKey: ['admin', 'donations-management-list', page, pageSize] as const,
-            queryFn: () => lastValueFrom(this.http.get<PagedResponse<Reservation>>(`${this.config.apiUrl}/admin/donations`, {
+            queryFn: () => lastValueFrom(this.http.get<PagedResponse<AdminDonationResponse>>(`${this.config.apiUrl}/admin/donations`, {
                 params: {
                     page: String(page),
                     pageSize: String(pageSize),

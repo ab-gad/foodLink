@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { AuthService } from '@foodlink/shared-auth-data-access';
 import { SidebarData, SidebarInsetPage } from '@foodlink/shared-ui-components';
 import { provideIcons } from '@ng-icons/core';
-import { lucideLayoutDashboard, lucideUsers, lucideHeartHandshake, lucideBuilding2, lucidePackage } from '@ng-icons/lucide';
+import { lucideLayoutDashboard, lucideUsers, lucideHeartHandshake, lucideBuilding2, lucidePackage, lucideHandHeart } from '@ng-icons/lucide';
 
 @Component({
   selector: 'admin-shell',
@@ -16,6 +16,7 @@ import { lucideLayoutDashboard, lucideUsers, lucideHeartHandshake, lucideBuildin
       lucideHeartHandshake,
       lucideBuilding2,
       lucidePackage,
+      lucideHandHeart,
     }),
   ],
   template: `
@@ -75,6 +76,11 @@ export class AdminShellComponent {
               title: 'Reservations',
               icon: 'lucidePackage',
               url: '/reservations',
+            },
+            {
+              title: 'Donations',
+              icon: 'lucideHandHeart',
+              url: '/donations',
             },
           ]
         }

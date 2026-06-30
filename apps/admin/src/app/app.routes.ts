@@ -39,16 +39,64 @@ export const appRoutes: Routes = [
                         redirectTo: 'info'
                     },
                     {
+                        canActivate: [stateRequiredGuard],
+                        data: {
+                            requiredStateKey: 'charity',
+                        } as StateRequiredRouteData,
                         title: 'Charity Profile',
                         path: 'info',
                         loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.AdminCharityProfileInfo),
                     },
                     {
+                        canActivate: [stateRequiredGuard],
+                        data: {
+                            requiredStateKey: 'charity',
+                        } as StateRequiredRouteData,
                         title: 'Charity Reservation',
                         path: 'reservations',
                         loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.ReservationsTableComponent),
                     }
                 ]
+            },
+            {
+                path: 'businesses',
+                title: 'Businesses',
+                loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.AdminBusinessesPage),
+            },
+            {
+                path: 'businesses/:id',
+                canActivate: [stateRequiredGuard],
+                loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.AdminBusinessProfile),
+                children: [
+                    {
+                        path: '',
+                        pathMatch: 'full',
+                        redirectTo: 'info'
+                    },
+                    {
+                        canActivate: [stateRequiredGuard],
+                        data: {
+                            requiredStateKey: 'business',
+                        } as StateRequiredRouteData,
+                        title: 'Business Profile',
+                        path: 'info',
+                        loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.AdminBusinessProfileInfo),
+                    },
+                    {
+                        canActivate: [stateRequiredGuard],
+                        data: {
+                            requiredStateKey: 'business',
+                        } as StateRequiredRouteData,
+                        title: 'Business Donations',
+                        path: 'donations',
+                        loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.DonationsTableComponent),
+                    }
+                ]
+            },
+            {
+                path: 'donations',
+                title: 'Donations',
+                loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.DonationsTableComponent),
             },
             {
                 path: 'reservations',
@@ -63,17 +111,6 @@ export const appRoutes: Routes = [
                     requiredStateKey: 'reservation',
                 } as StateRequiredRouteData,
                 loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.ReservationDetailsComponent),
-            },
-            {
-                path: 'businesses',
-                title: 'Businesses',
-                loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.AdminBusinessesPage),
-            },
-            {
-                path: 'businesses/:id',
-                title: 'Business Profile',
-                canActivate: [stateRequiredGuard],
-                loadComponent: () => import('@foodlink/admin-dashboard-feature').then(m => m.AdminBusinessProfile)
             },
             {
                 path: '',

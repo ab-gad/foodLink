@@ -77,7 +77,7 @@ export const stateRequiredGuard: CanActivateFn = (route, state): boolean | UrlTr
     // 1. Extract developer-configured metadata configurations from the route matrix
     const routeConfig = (route.data as StateRequiredRouteData) || {};
     const targetKey = routeConfig.requiredStateKey || 'title';
-    const strategy = routeConfig.fallbackStrategy || 'climbUp';
+    const strategy = routeConfig.fallbackStrategy || 'rootHome';
 
     // 2. Validate contemporary transition states against persistent browser session history
     const currentNavigation = router.currentNavigation();

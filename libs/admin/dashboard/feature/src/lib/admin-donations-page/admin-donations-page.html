@@ -1,0 +1,234 @@
+<!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
+<div
+  class="w-full space-y-4 p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm"
+>
+  <div class="flex justify-between items-center pb-2">
+    <div>
+      <h2
+        class="text-lg font-bold text-slate-900 dark:text-slate-50 tracking-tight"
+      >
+        Donations Ledger
+      </h2>
+      <p class="text-xs text-slate-500">
+        Volumetric overview tracking real-time donation distributions and
+        availability matrix status.
+      </p>
+    </div>
+
+    <brn-popover>
+      <button
+        brnPopoverTrigger
+        hlmBtn
+        variant="outline"
+        size="sm"
+        class="flex items-center gap-2"
+      >
+        Columns <ng-icon name="lucideChevronDown" />
+      </button>
+
+      <div
+        hlmPopoverContent
+        *brnPopoverContent
+        class="w-56 p-2 space-y-1 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg shadow-lg z-50"
+      >
+        @for (column of table.getAllLeafColumns(); track column.id) { @if
+        (column.getCanHide()) {
+        <label
+          class="flex items-center gap-2 px-2 py-1.5 rounded text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer text-slate-700 dark:text-slate-300"
+        >
+          <hlm-checkbox
+            [checked]="column.getIsVisible()"
+            (checkedChange)="column.toggleVisibility($event)"
+          />
+          <span class="capitalize">{{ column.id }}</span>
+        </label>
+        } }
+      </div>
+    </brn-popover>
+  </div>
+
+  <div
+    class="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800"
+  >
+    <table hlmTable class="w-full text-sm border-collapse">
+      <thead hlmTHead class="bg-slate-50/70 dark:bg-slate-950/50">
+        @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+        <tr hlmTr class="border-b border-slate-200 dark:border-slate-800">
+          @for (header of headerGroup.headers; track header.id) {
+          <th
+            hlmTh
+            class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 relative text-left"
+          >
+            <div class="flex items-center justify-between gap-2">
+              <ng-container
+                *flexRender="header.column.columnDef.header; props: header.getContext(); let text"
+              >
+                {{ text }}
+              </ng-container>
+
+              @if ((header.id === 'business' || header.id === 'status') &&
+              !donationsQuery.isPending()) {
+              <brn-popover>
+                <button
+                  brnPopoverTrigger
+                  class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded transition-colors"
+                >
+                  <ng-icon
+                    name="lucideFilter"
+                    [class.text-blue-500]="header.column.getIsFiltered()"
+                  />
+                </button>
+
+                <div
+                  hlmPopoverContent
+                  *brnPopoverContent
+                  class="w-56 p-2 text-slate-700 dark:text-slate-300 normal-case tracking-normal bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl z-50"
+                >
+                  <p
+                    class="text-[10px] font-bold uppercase text-slate-400 px-2 py-1"
+                  >
+                    Filter Records
+                  </p>
+                  <div class="max-h-48 overflow-y-auto space-y-1 mt-1">
+                    @for (option of (header.id === 'business' ?
+                    dynamicFilters().business : dynamicFilters().status); track
+                    option.value) {
+                    <label
+                      class="flex items-center gap-2.5 px-2 py-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer text-xs font-medium"
+                    >
+                      <hlm-checkbox
+                        [checked]="isValueChecked(header.id, option.value)"
+                        (checkedChange)="toggleFacetFilter(header.id, option.value)"
+                      />
+                      <span>{{ option.label }}</span>
+                    </label>
+                    }
+                  </div>
+                </div>
+              </brn-popover>
+              }
+            </div>
+          </th>
+          }
+        </tr>
+        }
+      </thead>
+
+      <tbody hlmTBody class="divide-y divide-slate-200 dark:divide-slate-800">
+        @if (donationsQuery.isPending()) { @for (skeletonRow of [1, 2, 3]; track
+        skeletonRow) {
+        <tr hlmTr class="animate-pulse">
+          @for (column of table.getVisibleLeafColumns(); track column.id) {
+          <td hlmTd class="px-4 py-4">
+            <div class="flex items-center gap-3">
+              @if (column.id === 'title') {
+              <hlm-skeleton class="w-10 h-10 rounded-lg shrink-0" />
+              <div class="space-y-2 w-32">
+                <hlm-skeleton class="h-4 w-full" />
+                <hlm-skeleton class="h-3 w-3/4" />
+              </div>
+              } @else {
+              <hlm-skeleton class="h-4 w-24" />
+              }
+            </div>
+          </td>
+          }
+        </tr>
+        } } @else { @for (row of table.getRowModel().rows; track row.id) {
+        <tr
+          hlmTr
+          class="hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors"
+        >
+          @for (cell of row.getVisibleCells(); track cell.id) {
+          <td
+            hlmTd
+            class="px-4 py-3.5 align-middle text-slate-600 dark:text-slate-300"
+          >
+            @switch (cell.column.id) { @case ('title') {
+            <div class="flex items-center gap-3">
+              @if (row.original.imageUrl) {
+              <img
+                [alt]=""
+                [src]="row.original.imageUrl"
+                class="w-10 h-10 rounded-lg object-cover border border-slate-100 dark:border-slate-800"
+              />
+              } @else {
+              <div
+                class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400"
+              >
+                <ng-icon name="lucideEyeOff" />
+              </div>
+              }
+              <div>
+                <p class="font-medium text-slate-900 dark:text-slate-100">
+                  {{ row.original.title }}
+                </p>
+                <p class="text-xs text-slate-500">
+                  ID: {{ row.original.id | slice:0:7 }}
+                </p>
+              </div>
+            </div>
+            } @case ('business') {
+            <span class="font-medium text-slate-900 dark:text-slate-100"
+              >{{ row.original.businessName }}</span
+            >
+            } @case ('status') { @let status = row.original.status;
+            <span
+              class="px-2 py-0.5 rounded-full text-xs font-semibold border"
+              [ngClass]="{
+                          'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/50': status === 'Available',
+                          'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900/50': status === 'PartiallyReserved',
+                          'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/30 dark:text-indigo-400 dark:border-indigo-900/50': status === 'FullyReserved',
+                          'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/30 dark:text-sky-400 dark:border-sky-900/50': status === 'Completed',
+                          'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-900/50': status === 'Cancelled',
+                          'bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-800': status === 'Draft' || status === 'Expired'
+                        }"
+            >
+              {{ status }}
+            </span>
+            } @case ('items') {
+            <div class="text-xs space-y-0.5 font-medium">
+              <p class="text-slate-900 dark:text-slate-100">
+                {{ row.original.totalItems }} Total Items
+              </p>
+              <p class="text-blue-600 dark:text-blue-400">
+                {{ row.original.reservedItems }} Reserved
+              </p>
+            </div>
+            } @case ('expirationDate') {
+            <span
+              class="text-xs text-slate-900 dark:text-slate-100 font-medium"
+            >
+              {{ row.original.expirationDate | date:'mediumDate' }}
+            </span>
+            } @case ('details') {
+            <div class="flex justify-center items-center">
+              <button
+                hlmBtn
+                variant="ghost"
+                size="icon"
+                class="hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors"
+                (click)="viewDonationDetails(row.original)"
+              >
+                <ng-icon name="lucideSquareArrowOutUpRight" class="text-base" />
+              </button>
+            </div>
+            } }
+          </td>
+          }
+        </tr>
+        } @empty {
+        <tr hlmTr>
+          <td
+            hlmTd
+            [attr.colspan]="table.getVisibleLeafColumns().length"
+            class="h-32 text-center text-slate-400"
+          >
+            No donation ledger entries match the chosen filter configuration.
+          </td>
+        </tr>
+        } }
+      </tbody>
+    </table>
+  </div>
+</div>
