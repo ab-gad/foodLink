@@ -6,13 +6,13 @@ import { HlmCollapsibleImports } from '@spartan-ng/helm/collapsible';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 
 @Component({
-    selector: 'lib-shared-ui-nav-items-expandable',
-    imports: [HlmSidebarImports, NgIcon, HlmCollapsibleImports, RouterLink],
-    providers: [provideIcons({ lucideSquareTerminal, lucideBot, lucideBookOpen, lucideSettings2, lucideChevronRight })],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
+	selector: 'lib-shared-ui-nav-items-expandable',
+	imports: [HlmSidebarImports, NgIcon, HlmCollapsibleImports, RouterLink],
+	providers: [provideIcons({ lucideSquareTerminal, lucideBot, lucideBookOpen, lucideSettings2, lucideChevronRight })],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	template: `
 		<hlm-sidebar-group>
-			<div hlmSidebarGroupLabel>Platform</div>
+			<div hlmSidebarGroupLabel>{{groupTitle()}}</div>
 			<ul hlmSidebarMenu>
 				@for (item of items(); track $index) {
 					<hlm-collapsible [expanded]="item.isActive ?? false">
@@ -29,7 +29,12 @@ import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 									<ul hlmSidebarMenuSub>
 										@for (subItem of subItems; track $index) {
 											<li hlmSidebarMenuSubItem>
-												<a hlmSidebarMenuSubButton [routerLink]="subItem.url">{{ subItem.title }}</a>
+												<a hlmSidebarMenuSubButton [routerLink]="subItem.url">
+													@if(subItem.icon){
+														<ng-icon [name]="subItem.icon" />
+													}
+													{{ subItem.title }}
+												</a>
 											</li>
 										}
 									</ul>
@@ -43,16 +48,18 @@ import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 	`,
 })
 export class NavMain {
-    public readonly items = input.required<
-        {
-            title: string;
-            url: string;
-            icon: string;
-            isActive?: boolean;
-            items?: {
-                title: string;
-                url: string;
-            }[];
-        }[]
-    >();
+	public readonly items = input.required<
+		{
+			title: string;
+			url: string;
+			icon: string;
+			isActive?: boolean;
+			items?: {
+				icon?: string;
+				title: string;
+				url: string;
+			}[];
+		}[]
+	>();
+	public groupTitle = input<string>('Platform')
 }

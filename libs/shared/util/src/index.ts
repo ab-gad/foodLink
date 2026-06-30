@@ -3,4 +3,7 @@ export * from './lib/models/pagination-request';
 export * from './lib/models/paged-response';
 export * from './lib/config/app-config.model';
 export * from './lib/config/app-config.token';
+export * from './lib/models/chart-item';
 export * from './lib/config/http-context-tokens';
+export * from './lib/services/breadcrumb.service';
+export * from './lib/services/theme.service';

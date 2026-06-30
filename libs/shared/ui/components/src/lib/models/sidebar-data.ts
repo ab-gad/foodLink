@@ -5,7 +5,10 @@ export interface SidebarData {
         avatar: string;
         logout: () => void;
     };
-    navMain: NavItemWithChildren[];
+    navMain: {
+        groupItems: NavItemWithChildren[],
+        groupName: string;
+    }[];
     navSecondary: NavItem[];
     projects: NavItem[];
 }
@@ -22,5 +25,5 @@ interface NavItem extends BaseNavItem {
 
 interface NavItemWithChildren extends NavItem {
     isActive?: boolean;
-    items?: BaseNavItem[];
+    items?: NavItem[];
 }

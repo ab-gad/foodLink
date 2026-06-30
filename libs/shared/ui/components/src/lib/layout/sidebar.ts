@@ -35,8 +35,12 @@ import { SidebarData } from '../models/sidebar-data';
 				</hlm-sidebar-header>
 
 				<hlm-sidebar-content>
-					<lib-shared-ui-nav-items-expandable [items]="data().navMain" />
-					<lib-shared-ui-nav-items-context [projects]="data().projects" />
+					@for (navGroup of data().navMain; track $index) {
+						<lib-shared-ui-nav-items-expandable [items]="navGroup.groupItems" [groupTitle]="navGroup.groupName" />
+					}
+					@if(data().projects.length){
+						<lib-shared-ui-nav-items-context [projects]="data().projects" />
+					}
 					<lib-shared-ui-nav-secondary class="mt-auto" [items]="data().navSecondary" />
 				</hlm-sidebar-content>
 				<hlm-sidebar-footer>

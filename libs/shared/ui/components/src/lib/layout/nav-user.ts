@@ -11,10 +11,11 @@ import {
 import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmSidebarImports, HlmSidebarService } from '@spartan-ng/helm/sidebar';
+import { UserAvatar } from "../user-avatar";
 
 @Component({
 	selector: 'lib-shared-ui-nav-user',
-	imports: [HlmSidebarImports, HlmAvatarImports, NgIcon, HlmDropdownMenuImports],
+	imports: [HlmSidebarImports, HlmAvatarImports, NgIcon, HlmDropdownMenuImports, UserAvatar],
 	providers: [
 		provideIcons({
 			lucideChevronsUpDown,
@@ -31,10 +32,7 @@ import { HlmSidebarImports, HlmSidebarService } from '@spartan-ng/helm/sidebar';
 		<ul hlmSidebarMenu>
 			<li hlmSidebarMenuItem>
 				<button hlmSidebarMenuButton size="lg" [hlmDropdownMenuTrigger]="menu" [side]="_menuSide()" align="end">
-					<hlm-avatar class="rounded-lg">
-						<img [src]="u.avatar" [alt]="u.name" hlmAvatarImage />
-						<span class="rounded-lg bg-[#FD005B] text-white" hlmAvatarFallback>{{user().name.charAt(0).toUpperCase()}}</span>
-					</hlm-avatar>
+					<lib-shared-user-avatar [image]="u.avatar" [fallbackText]="u.name"></lib-shared-user-avatar>
 					<div class="grid flex-1 text-left text-sm leading-tight">
 						<span class="truncate font-medium">{{ u.name }}</span>
 						<span class="truncate text-xs">{{ u.email }}</span>
@@ -48,10 +46,8 @@ import { HlmSidebarImports, HlmSidebarService } from '@spartan-ng/helm/sidebar';
 			<hlm-dropdown-menu class="min-w-56 rounded-lg">
 				<hlm-dropdown-menu-label>
 					<div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-						<hlm-avatar class="rounded-lg">
-							<img [src]="u.avatar" [alt]="u.name" hlmAvatarImage />
-							<span class="rounded-lg bg-[#FD005B] text-white" hlmAvatarFallback>RG</span>
-						</hlm-avatar>
+						<lib-shared-user-avatar [image]="u.avatar" [fallbackText]="u.name"></lib-shared-user-avatar>
+
 						<div class="grid flex-1 text-left text-sm leading-tight">
 							<span class="truncate font-medium">{{ u.name }}</span>
 							<span class="truncate text-xs">{{ u.email }}</span>

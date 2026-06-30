@@ -1,4 +1,3 @@
-// site-header.component.ts
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HlmBreadCrumbImports } from '@spartan-ng/helm/breadcrumb';
@@ -24,6 +23,7 @@ import { BreadcrumbService, ThemeService } from '@foodlink/shared-util'
 	template: `
         <header class="flex h-16 shrink-0 items-center justify-between gap-2 px-4 border-b border-slate-200 dark:border-slate-800 w-full">
             <div class="flex items-center gap-2">
+                <!-- eslint-disable-next-line @angular-eslint/template/elements-content -->
                 <button hlmSidebarTrigger></button>
                 <hlm-separator orientation="vertical" class="mr-2 data-[orientation=vertical]:h-4" />
                 
