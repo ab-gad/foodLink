@@ -1,0 +1,81 @@
+@if (charity()) {
+<div class="flex flex-col gap-6">
+  <div
+    class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+  >
+    <div class="flex items-center gap-4">
+      <div
+        class="h-16 w-16 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 overflow-hidden"
+      >
+        @if (charity()?.profileImage) {
+        <img
+          [src]="charity()!.profileImage"
+          [alt]="charity()!.name"
+          class="h-full w-full object-cover"
+        />
+        } @else {
+        <ng-icon name="lucideBuilding" class="text-3xl" />
+        }
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1
+            class="text-2xl font-bold text-slate-900 dark:text-slate-50 tracking-tight"
+          >
+            {{ charity()?.name }}
+          </h1>
+          @if (charity()?.isSuspended) {
+          <span
+            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900"
+          >
+            <ng-icon name="lucideShieldAlert" /> Suspended
+          </span>
+          }
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+          ID: {{ charity()?.id }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-b border-slate-200 dark:border-slate-800">
+    <nav class="flex gap-6 -mb-px" aria-label="Profile Tabs">
+      <button
+        type="button"
+        (click)="navigateToTab('info', 'Profile')"
+        [attr.aria-current]="isTabActive('info') ? 'page' : null"
+        class="flex items-center gap-2 pb-3 px-1 border-b-2 text-sm font-semibold transition-all duration-200 cursor-pointer"
+        [ngClass]="isTabActive('info') 
+          ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400' 
+          : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'"
+      >
+        <ng-icon name="lucideInfo" class="text-base" />
+        General Info
+      </button>
+
+      <button
+        type="button"
+        (click)="navigateToTab('reservations', 'Reservations')"
+        [attr.aria-current]="isTabActive('reservations') ? 'page' : null"
+        class="flex items-center gap-2 pb-3 px-1 border-b-2 text-sm font-semibold transition-all duration-200 cursor-pointer"
+        [ngClass]="isTabActive('reservations') 
+          ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400' 
+          : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'"
+      >
+        <ng-icon name="lucidePackage" class="text-base" />
+        Reservations
+      </button>
+    </nav>
+  </div>
+
+  <div class="mt-2">
+    <router-outlet />
+  </div>
+</div>
+
+} @else {
+<div class="flex h-96 w-full items-center justify-center text-slate-500">
+  <p class="text-sm">No charity profile data context available.</p>
+</div>
+}
