@@ -1,5 +1,5 @@
 import { ApplicationConfig, EnvironmentProviders, provideBrowserGlobalErrorListeners, Provider } from '@angular/core';
-import { provideRouter, Routes, withComponentInputBinding } from '@angular/router';
+import { provideRouter, Routes, TitleStrategy, withComponentInputBinding } from '@angular/router';
 import { HttpErrorResponse, HttpStatusCode, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideTanStackQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import { ENV_CONFIG, EnvironmentConfig } from '@foodlink/shared-util';
@@ -8,6 +8,7 @@ import { authInterceptor } from '../interceptors/auth.interceptor';
 import { withDevtools } from '@tanstack/angular-query-experimental/devtools'
 import { feedbackInterceptor } from '../interceptors/feedback.interceptor';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { CustomTitleStrategy } from '../strategies/custom-title.strategy';
 export interface AppConfigOptions {
     routes: Routes;
     environment: EnvironmentConfig;
@@ -61,6 +62,7 @@ export function createApplicationConfig(options: AppConfigOptions): ApplicationC
                 provide: ENV_CONFIG,
                 useValue: environment,
             },
+            { provide: TitleStrategy, useClass: CustomTitleStrategy },
             provideCharts(withDefaultRegisterables()),
             ...additionalProviders,
         ],

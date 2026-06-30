@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AuthService } from '@foodlink/shared-auth-data-access';
 import { LoginForm, AuthLayout } from "@foodlink/shared-auth-ui";
 import { LoginRequest } from '@foodlink/shared-auth-util'
+import { injectMutation } from '@tanstack/angular-query-experimental';
 
 @Component({
   selector: 'lib-auth-login-page',
@@ -12,8 +13,8 @@ import { LoginRequest } from '@foodlink/shared-auth-util'
 })
 export class LoginPage {
   protected readonly authService = inject(AuthService);
-
+  protected loginMutation = injectMutation(() => this.authService.loginMutationOptions());
   protected onLoginRequest(credentials: LoginRequest): void {
-    this.authService.loginMutation.mutate(credentials);
+    this.loginMutation.mutate(credentials);
   }
 }

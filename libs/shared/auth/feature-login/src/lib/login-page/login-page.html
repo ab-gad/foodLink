@@ -1,7 +1,6 @@
 <lib-auth-ui-auth-layout>
   <lib-auth-ui-login-form
-    form
     (formSubmit)="onLoginRequest($event)"
-    [isLoading]="authService.loginMutation.isPending()"
+    [isLoading]="loginMutation.isPending()"
   />
 </lib-auth-ui-auth-layout>

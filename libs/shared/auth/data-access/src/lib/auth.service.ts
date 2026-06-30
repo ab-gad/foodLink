@@ -1,9 +1,9 @@
 import { inject, Injectable, signal, computed } from '@angular/core';
-import { HttpClient, HttpContext } from '@angular/common/http';
-import { injectMutation, QueryClient } from '@tanstack/angular-query-experimental';
+import { HttpClient, HttpContext, HttpErrorResponse } from '@angular/common/http';
+import { QueryClient } from '@tanstack/angular-query-experimental';
 import { LoginRequest, AuthenticationResponse } from '@foodlink/shared-auth-util';
 import { lastValueFrom } from 'rxjs';
-import { ENV_CONFIG, SHOW_GLOBAL_LOADER, TOAST_PROMISE_CONFIG } from '@foodlink/shared-util'
+import { ENV_CONFIG, SHOW_GLOBAL_LOADER, TOAST_PROMISE_CONFIG } from '@foodlink/shared-util';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -23,20 +23,25 @@ export class AuthService {
     readonly userRole = computed(() => this.#user()?.role ?? null);
     readonly token = computed(() => this.#token());
 
-    readonly loginMutation = injectMutation(() => ({
-        mutationFn: (credentials: LoginRequest) =>
-            lastValueFrom(
-                this.http.post<AuthenticationResponse>(`${this.apiUrl}/auth/login`, credentials, {
-                    // context: new HttpContext().set(SHOW_GLOBAL_LOADER, true)
-                    context: new HttpContext().set(SHOW_GLOBAL_LOADER, true).set(TOAST_PROMISE_CONFIG, {
-                        success: 'Login successful',
-                        error: (err) => `Login failed: ${err.error.message || err.message}`
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    loginMutationOptions() {
+        return {
+            mutationFn: (credentials: LoginRequest) =>
+                lastValueFrom(
+                    this.http.post<AuthenticationResponse>(`${this.apiUrl}/auth/login`, credentials, {
+                        context: new HttpContext()
+                            .set(SHOW_GLOBAL_LOADER, true)
+                            .set(TOAST_PROMISE_CONFIG, {
+                                success: 'Login successful',
+                                error: (err: HttpErrorResponse) => `Login failed: ${err.error?.message || err.message}`
+                            })
                     })
-                }))
-        , onSuccess: (response) => {
-            this.handleAuthSuccess(response);
-        }
-    }));
+                ),
+            onSuccess: (response: AuthenticationResponse) => {
+                this.handleAuthSuccess(response);
+            }
+        };
+    }
 
     private handleAuthSuccess(response: AuthenticationResponse): void {
         localStorage.setItem('fl_token', response.token);
@@ -47,9 +52,10 @@ export class AuthService {
     }
 
     logout(): void {
+        // FIXED: queryClient.clear() destroys the entire cache and removes all queries.
+        // You don't need resetQueries() or removeQueries() after calling clear()!
         this.queryClient.clear();
-        this.queryClient.resetQueries();
-        this.queryClient.removeQueries();
+
         localStorage.removeItem('fl_token');
         localStorage.removeItem('fl_user');
         this.#token.set(null);
